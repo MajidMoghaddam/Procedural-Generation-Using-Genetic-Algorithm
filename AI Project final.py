@@ -1,6 +1,6 @@
-# For game Section
-import pygame
-# For genetic algorithm 
+import pygame # For game section
+
+# For genetic algorithm calculations
 from deap import base, creator, tools, algorithms
 import numpy as np
 
@@ -22,7 +22,7 @@ def evaluate(individual):
     empty_cells = np.sum(level == 0)
     print("Empty Cell: ", empty_cells)
 
-    # fitness
+    # fitness function
     fitness = (empty_cells / (LEVEL_WIDTH * LEVEL_HEIGHT)) * 100
 
     return fitness,
@@ -31,7 +31,7 @@ def get_neighbors(pos):
     neighbors = [(pos[0] + dx, pos[1] + dy) for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]]
     return [(x, y) for x, y in neighbors if 0 <= x < LEVEL_HEIGHT and 0 <= y < LEVEL_WIDTH]
 
-# BFS to check if the goal is reachable from start.
+# BFS to check if the goal is reachable from start point
 def is_reachable(level, start, goal):
     queue = [start]
     visited = set()
@@ -71,13 +71,11 @@ toolbox.register("select", tools.selTournament, tournsize=5)
 toolbox.register("evaluate", evaluate)
 
 # Genetic Algorithm parameters
-population = toolbox.population(n=100)
-cxpb = 0.5
-mutpb = 0.5
-FitnessTres = 75
-MAX_GENERATIONS = 150
-
-# fitness function = (Number of Empty Cells / (Level Width * Level height)) * 100
+population = toolbox.population(n=100) # Initila population is n=100
+cxpb = 0.5 # The probability of cross over
+mutpb = 0.5 # The probability of mutation
+FitnessTres = 70 
+MAX_GENERATIONS = 1000
 
 # Run the genetic algorithm with a retry mechanism for ensuring completeness
 def run_evolution():
@@ -96,6 +94,7 @@ def run_evolution():
     return None
 
 best_ind = run_evolution()
+
 if best_ind is None:
     #best_ind = run_evolution()
     raise Exception("Failed to find a valid level within the maximum number of generations")
